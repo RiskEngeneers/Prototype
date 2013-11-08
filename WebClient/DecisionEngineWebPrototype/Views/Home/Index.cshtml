@@ -11,8 +11,7 @@
         <style type="text/css" media="screen">
             #editor { 
                 position: relative;
-                min-height: 200px;
-                margin: 0
+                min-height: 100px;
             }
         </style>
         <link href="@Url.Content("~/Content/bootstrap-theme.css")" rel="stylesheet" type="text/css" />
@@ -22,7 +21,7 @@
         <script type='text/javascript' src='@Url.Content("~/Scripts/json2.js")'></script>
         <script type='text/javascript' src='@Url.Content("~/Scripts/jquery-2.0.0.js")'></script>
         <script type='text/javascript' src='@Url.Content("~/Scripts/bootstrap.js")'></script>
-        <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script type='text/javascript' src='@Url.Content("~/Scripts/ace/ace.js")' charset="utf-8"></script>
     </head>
     <body style="padding-top: 50px">
         <!--<strong data-bind="text: JSON.stringify({name : 1})"></strong>-->
@@ -58,7 +57,7 @@
             </div>
             
             <!-- View for activity -->
-            <div style="margin-left: 300px; padding: 30px" data-bind="with: chosenActivity">
+            <div style="margin-left: 330px; margin-top: 30px" data-bind="with: chosenActivity">
                 <div class="input-group">
                     <span class="input-group-addon">Name</span>
                     
@@ -66,7 +65,7 @@
                     <input type="text" class="form-control" placeholder="Activity name" data-bind="value: name">
                     <!-- /ko -->
                     <!-- ko ifnot: $root.allowEdit -->
-                    <span class="form-control" data-bind="text: name"> 1</span>
+                    <span class="form-control" data-bind="text: name"></span>
                     <!-- /ko -->
                 </div>
                 
@@ -74,24 +73,55 @@
                     <div class="panel-heading">
                         <h3 class="panel-title">Activity condition</h3>
                     </div>
-                    <div class="panel-body" style="padding: 0; margin: 0">
-                        <div id="editor" style="padding: 0; margin: 0"></div>
+                    <div class="panel-body" style="height: 100px; padding: 0">
+                        <div id="activityConditionEditor" style="height: 100px"></div>
+                    </div>
+                </div>
+                
+                <div class="panel panel-default" style="margin-top: 20px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Activity rules</h3>
+                    </div>
+                    <div class="panel-body" style="height: 200px">
+                        <span>Rules list.</span>
                     </div>
                 </div>
             </div>
+            
+            <!-- View for Group -->
+            <div style="margin-left: 330px; margin-top: 30px" data-bind="with: chosenGroup">
+                <div class="input-group">
+                    <span class="input-group-addon">Name</span>
+                    
+                    <!-- ko if: $root.allowEdit -->
+                    <input type="text" class="form-control" placeholder="Group name" data-bind="value: name">
+                    <!-- /ko -->
+                    <!-- ko ifnot: $root.allowEdit -->
+                    <span class="form-control" data-bind="text: name"></span>
+                    <!-- /ko -->
+                </div>
+                
+                <div class="panel panel-default" style="margin-top: 20px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Group condition</h3>
+                    </div>
+                    <div class="panel-body" style="height: 100px; padding: 0">
+                        <div id="groupConditionEditor" style="height: 100px"></div>
+                    </div>
+                </div>
+            </div>
+            
+            
         </div>
     </body>
 </html>
 
 <script type="text/html" id="activities-group-tree-node">
-    <!-- ko ifnot: CheckArrayNonEmpty($data.data.groups()) || CheckArrayNonEmpty($data.data.activities()) -->
-    <a href="#" class="list-group-item" data-bind="style: { marginLeft : (indent * 20).toString() + 'px'}">
-        <span class="badge">...</span><span data-bind="text: data.name"></span>
-    </a>
-    <!-- /ko -->
-    <!-- ko if: CheckArrayNonEmpty($data.data.groups()) || CheckArrayNonEmpty($data.data.activities()) -->
-    <a href="#" class="list-group-item" data-bind="style: { marginLeft: (indent * 20).toString() + 'px' }">
-        <span class="glyphicon glyphicon-minus"></span><span class="badge">...</span> <span data-bind="text: data.name"></span>
+    <a href="#" data-bind="css: (($data.data === $root.chosenGroup()) ? 'list-group-item active' : 'list-group-item'), style: { marginLeft: (indent * 20).toString() + 'px' }, click: $root.showGroupContent">
+        <!-- ko if: CheckArrayNonEmpty($data.data.groups()) || CheckArrayNonEmpty($data.data.activities()) -->
+        <span class="glyphicon glyphicon-minus"></span>
+        <!-- /ko -->
+        <span class="badge">...</span> <span data-bind="text: data.name"></span>
     </a>
     
     <!-- ko foreach: data.groups() -->
@@ -99,8 +129,6 @@
     <!-- /ko -->
     <!-- ko foreach: data.activities() -->
         <!-- ko template: { name: 'activity-tree-node', data: { data: $data, indent: $parent.indent + 1} } --><!-- /ko -->
-    <!-- /ko -->
-    
     <!-- /ko -->
 </script>
 <script type="text/html" id="activity-tree-node">
@@ -185,7 +213,6 @@
             name: ko.observable(plainGroup.Name), groups: ko.observableArray(),
             activities: ko.observableArray(), condition: ko.observable(plainGroup.Condition)
         };
-        console.log(group.name());
         if (plainGroup.Groups != null) {
             for (var i = 0; i < plainGroup.Groups.length; i++) {
                 group.groups.push(getObservableActivityGroup(plainGroup.Groups[i]));
@@ -207,7 +234,6 @@
             rejectRules: ko.observableArray(),
             suspendRules: ko.observableArray(),
         };
-        console.log(activity.name());
         if (plainActivity.ApproveRules != null) {
             for (var i = 0; i < plainActivity.ApproveRules.length; i++) {
                 activity.approveRules.push(getObservableRule(plainActivity.ApproveRules[i]));
@@ -232,7 +258,6 @@
             description: ko.observable(plainRule.Description),
             expression: ko.observable(plainRule.Expression)
         };
-        console.log(rule.name());
         return rule;
     }
     
@@ -243,16 +268,28 @@
         self.rootGroups = ko.observableArray();
         self.showActivityContent = function (data) {
             self.chosenActivity(data.data);
-            var editor = ace.edit("editor");
+            self.chosenGroup(null);
+
+            var editor = ace.edit("activityConditionEditor");
             //editor.setTheme("ace/theme/monokai");
             editor.getSession().setMode("ace/mode/javascript");
-            console.log(data.data);
             editor.setValue(data.data.condition());
+            editor.setReadOnly(true);
+            console.log("PISH!");
+        };
+        self.showGroupContent = function (data) {
+            self.chosenActivity(null);
+            self.chosenGroup(data.data);
+            var editor = ace.edit("groupConditionEditor");
+            //editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/javascript");
+            editor.setValue(data.data.condition());
+            editor.setReadOnly(true);
         };
         self.chosenActivity = ko.observable();
+        self.chosenGroup = ko.observable();
         self.allowEdit = ko.observable(false);
-
-        self.fuck = ko.observable();
+        
 
         $.getJSON("/data/load", function (data) {
             for (var i = 0; i < data.Groups.length; i++) {
