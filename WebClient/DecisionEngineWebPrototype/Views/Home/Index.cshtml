@@ -1,0 +1,295 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Configuring decision engine</title>
+        <style type="text/css" media="screen">
+            #editor { 
+                position: relative;
+                min-height: 200px;
+                margin: 0
+            }
+        </style>
+        <link href="@Url.Content("~/Content/bootstrap-theme.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet" type="text/css" />
+        <script type='text/javascript' src='@Url.Content("~/Scripts/knockout-3.0.0.debug.js")'></script>
+        <script type='text/javascript' src='@Url.Content("~/Scripts/json2.js")'></script>
+        <script type='text/javascript' src='@Url.Content("~/Scripts/jquery-2.0.0.js")'></script>
+        <script type='text/javascript' src='@Url.Content("~/Scripts/bootstrap.js")'></script>
+        <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+    </head>
+    <body style="padding-top: 50px">
+        <!--<strong data-bind="text: JSON.stringify({name : 1})"></strong>-->
+     
+      <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Decision engine configuration</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><button type="button" class="btn btn-default navbar-btn">Add activity</button></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+        <div class="container">
+            <div class="panel panel-default" style="width: 300px; float: left">
+                <div class="panel-heading">Activities tree</div>
+                <div class="panel-body">
+                    <div class="list-group" data-bind="foreach: rootGroups">
+                        <!-- ko template: { name: 'activities-group-tree-node', data: { data: $data, indent: 0} } -->
+                        <!-- /ko -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- View for activity -->
+            <div style="margin-left: 300px; padding: 30px" data-bind="with: chosenActivity">
+                <div class="input-group">
+                    <span class="input-group-addon">Name</span>
+                    
+                    <!-- ko if: $root.allowEdit -->
+                    <input type="text" class="form-control" placeholder="Activity name" data-bind="value: name">
+                    <!-- /ko -->
+                    <!-- ko ifnot: $root.allowEdit -->
+                    <span class="form-control" data-bind="text: name"> 1</span>
+                    <!-- /ko -->
+                </div>
+                
+                <div class="panel panel-default" style="margin-top: 20px">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Activity condition</h3>
+                    </div>
+                    <div class="panel-body" style="padding: 0; margin: 0">
+                        <div id="editor" style="padding: 0; margin: 0"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script type="text/html" id="activities-group-tree-node">
+    <!-- ko ifnot: CheckArrayNonEmpty($data.data.groups()) || CheckArrayNonEmpty($data.data.activities()) -->
+    <a href="#" class="list-group-item" data-bind="style: { marginLeft : (indent * 20).toString() + 'px'}">
+        <span class="badge">...</span><span data-bind="text: data.name"></span>
+    </a>
+    <!-- /ko -->
+    <!-- ko if: CheckArrayNonEmpty($data.data.groups()) || CheckArrayNonEmpty($data.data.activities()) -->
+    <a href="#" class="list-group-item" data-bind="style: { marginLeft: (indent * 20).toString() + 'px' }">
+        <span class="glyphicon glyphicon-minus"></span><span class="badge">...</span> <span data-bind="text: data.name"></span>
+    </a>
+    
+    <!-- ko foreach: data.groups() -->
+        <!-- ko template: { name: 'activities-group-tree-node', data: { data: $data, indent: $parent.indent + 1} } --><!-- /ko -->
+    <!-- /ko -->
+    <!-- ko foreach: data.activities() -->
+        <!-- ko template: { name: 'activity-tree-node', data: { data: $data, indent: $parent.indent + 1} } --><!-- /ko -->
+    <!-- /ko -->
+    
+    <!-- /ko -->
+</script>
+<script type="text/html" id="activity-tree-node">
+    <a href="#" data-bind="css: (($data.data === $root.chosenActivity()) ? 'list-group-item active' : 'list-group-item'), style: { marginLeft: (indent * 20).toString() + 'px' }, click: $root.showActivityContent">
+        <span class="glyphicon glyphicon-minus"></span><span class="badge">...</span> <span data-bind="text: data.name"></span>
+    </a>
+    <!-- ko if: CheckArrayNonEmpty(data.approveRules()) -->
+    <a href="#" class="list-group-item" data-bind="style: { marginLeft: ((indent + 1) * 20).toString() + 'px' }">
+        <span>Approve rules</span>
+    </a>
+    <!-- /ko -->
+    
+    <!-- ko if: CheckArrayNonEmpty(data.rejectRules()) -->
+    <a href="#" class="list-group-item" data-bind="style: { marginLeft: ((indent + 1) * 20).toString() + 'px' }">
+        <span>Reject rules</span>
+    </a>
+    <!-- /ko -->
+    
+    <!-- ko if: CheckArrayNonEmpty(data.suspendRules()) -->
+    <a href="#" class="list-group-item" data-bind="style: { marginLeft: ((indent + 1) * 20).toString() + 'px' }">
+        <span>Suspend rules</span>
+    </a>
+    <!-- /ko -->
+</script>
+
+<script type='text/javascript'>
+    function CheckArrayNonEmpty(array) {
+        return array != null && array.length != 0;
+    }
+
+    function getStyle(el, styleProp) {
+        var value, defaultView = (el.ownerDocument || document).defaultView;
+        // W3C standard way:
+        if (defaultView && defaultView.getComputedStyle) {
+            // sanitize property name to css notation
+            // (hypen separated words eg. font-Size)
+            styleProp = styleProp.replace(/([A-Z])/g, "-$1").toLowerCase();
+            return defaultView.getComputedStyle(el, null).getPropertyValue(styleProp);
+        } else if (el.currentStyle) { // IE
+            // sanitize property name to camelCase
+            styleProp = styleProp.replace(/\-(\w)/g, function (str, letter) {
+                return letter.toUpperCase();
+            });
+            value = el.currentStyle[styleProp];
+            // convert other units to pixels on IE
+            if (/^\d+(em|pt|%|ex)?$/i.test(value)) {
+                return (function (value) {
+                    var oldLeft = el.style.left, oldRsLeft = el.runtimeStyle.left;
+                    el.runtimeStyle.left = el.currentStyle.left;
+                    el.style.left = value || 0;
+                    value = el.style.pixelLeft + "px";
+                    el.style.left = oldLeft;
+                    el.runtimeStyle.left = oldRsLeft;
+                    return value;
+                })(value);
+            }
+            return value;
+        }
+    }
+    
+    function getLeftMargin(el) {
+        return parseInt(getStyle(el, "margin-left"), 10);
+    }
+    
+    function getChildNodes(node) {
+        var targetNodeMargin = getLeftMargin(node[0]);
+        var result = [];
+        while (true) {
+            var nextNode = node.next(".list-group-item");
+            
+            if (nextNode == null || nextNode.length === 0 || getLeftMargin(nextNode[0]) <= targetNodeMargin) {
+                break;
+            }
+            result.push(nextNode[0]);
+            node = nextNode;
+        }
+        return result;
+    }
+    
+    function getObservableActivityGroup(plainGroup) {
+        var group = {
+            name: ko.observable(plainGroup.Name), groups: ko.observableArray(),
+            activities: ko.observableArray(), condition: ko.observable(plainGroup.Condition)
+        };
+        console.log(group.name());
+        if (plainGroup.Groups != null) {
+            for (var i = 0; i < plainGroup.Groups.length; i++) {
+                group.groups.push(getObservableActivityGroup(plainGroup.Groups[i]));
+            }
+        }
+        if (plainGroup.Activities != null) {
+            for (var j = 0; j < plainGroup.Activities.length; j++) {
+                group.activities.push(getObservableActivity(plainGroup.Activities[j]));
+            }
+        }
+        return group;
+    }
+    
+    function getObservableActivity(plainActivity) {
+        var activity = {
+            name: ko.observable(plainActivity.Name),
+            condition: ko.observable(plainActivity.Condition),
+            approveRules: ko.observableArray(),
+            rejectRules: ko.observableArray(),
+            suspendRules: ko.observableArray(),
+        };
+        console.log(activity.name());
+        if (plainActivity.ApproveRules != null) {
+            for (var i = 0; i < plainActivity.ApproveRules.length; i++) {
+                activity.approveRules.push(getObservableRule(plainActivity.ApproveRules[i]));
+            }
+        }
+        if (plainActivity.RejectRules != null) {
+            for (var j = 0; j < plainActivity.RejectRules.length; j++) {
+                activity.rejectRules.push(getObservableRule(plainActivity.RejectRules[j]));
+            }
+        }
+        if (plainActivity.SuspendRules != null) {
+            for (var k = 0; k < plainActivity.SuspendRules.length; k++) {
+                activity.suspendRules.push(getObservableRule(plainActivity.SuspendRules[k]));
+            }
+        }
+        return activity;
+    }
+    
+    function getObservableRule(plainRule) {
+        var rule = {
+            name: ko.observable(plainRule.Name),
+            description: ko.observable(plainRule.Description),
+            expression: ko.observable(plainRule.Expression)
+        };
+        console.log(rule.name());
+        return rule;
+    }
+    
+    // view models
+    function ActivityListViewModel() {
+        // Data
+        var self = this;
+        self.rootGroups = ko.observableArray();
+        self.showActivityContent = function (data) {
+            self.chosenActivity(data.data);
+            var editor = ace.edit("editor");
+            //editor.setTheme("ace/theme/monokai");
+            editor.getSession().setMode("ace/mode/javascript");
+            console.log(data.data);
+            editor.setValue(data.data.condition());
+        };
+        self.chosenActivity = ko.observable();
+        self.allowEdit = ko.observable(false);
+
+        self.fuck = ko.observable();
+
+        $.getJSON("/data/load", function (data) {
+            for (var i = 0; i < data.Groups.length; i++) {
+                self.rootGroups.push(getObservableActivityGroup(data.Groups[i]));
+            }
+
+            $(function () {
+
+                var arr = $('.list-group-item');
+
+                for (var i = 0; i < arr.length; i++) {
+                    var currentIndent = getLeftMargin(arr[i]);
+                    if (i < arr.length - 1 && getLeftMargin(arr[i + 1])> currentIndent) {
+                        $(arr[i]).addClass('parent_li').find(' > span.glyphicon').attr('title', 'Collapse this branch');
+                    }
+                }
+
+                $('.parent_li > span.glyphicon').on('click', function (e) {
+                    var children = $(getChildNodes($(this).parent('.parent_li')));
+
+                    if (children.is(":visible")) {
+                        children.hide('fast');
+                        $(this).attr('title', 'Expand this branch').addClass('glyphicon-plus').removeClass('glyphicon-minus');
+                    } else {
+                        children.show('fast');
+                        $(this).attr('title', 'Collapse this branch').addClass('glyphicon-minus').removeClass('glyphicon-plus');
+                    }
+                    e.stopPropagation();
+                });
+            });
+        });
+
+        //self.viewActivity = function(activity) {  };
+    };
+
+    ko.applyBindings(new ActivityListViewModel());
+    
+   
+    
+</script>
