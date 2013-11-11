@@ -1,12 +1,14 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace RiskEngine.Contracts.Definition
 {
-    interface IWorkflowDataProvider
+    public interface IWorkflowDataProvider
     {
         string Name { get; }
         Type OutputType { get; }
-        string[] RequiredProviders { get; }
+        IEnumerable<string> RequiredProviders { get; }
         object ProvideDataObject();
     }
 

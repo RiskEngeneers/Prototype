@@ -2,9 +2,9 @@
 {
     public class ProviderRuntimeResult
     {
-        public string ProviderName { get; private set; }
-        public EWorkflowProviderRuntimeStatus ProviderStatus { get; private set; }
-        public object Details { get; private set; }
-        public object Result { get; private set; }
+        public string ProviderName { get; set; }
+        public EWorkflowProviderRuntimeStatus ProviderStatus { get; set; }
+        public object Details { get;  set; }
+        public object Result { get;  set; }
     }
 }

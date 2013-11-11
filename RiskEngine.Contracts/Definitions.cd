@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RiskEngine.Contracts.Definition.Rule">
+    <Position X="2.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Definition\Rule.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="RiskEngine.Contracts.Definition.IDataProvider">
+    <Position X="4.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAoAAAQAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Definition\IDataProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RiskEngine.Contracts.Definition.IDataProvider&lt;TInput, TOutput&gt;">
+    <Position X="4.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Definition\IDataProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RiskEngine.Contracts.Definition.IWorkflowDataProvider">
+    <Position X="6.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAAAAAAAAAIAAAQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Definition\IWorkflowDataProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RiskEngine.Contracts.Definition.IWorkflowDataProvider&lt;TOutput&gt;">
+    <Position X="6.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Definition\IWorkflowDataProvider.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

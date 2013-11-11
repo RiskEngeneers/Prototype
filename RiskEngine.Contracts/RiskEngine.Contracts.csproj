@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>RuleSet.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Contracts.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -44,17 +52,22 @@
     <Compile Include="Runtime\EVerificationResult.cs" />
     <Compile Include="Runtime\EWorkflowProviderRuntimeStatus.cs" />
     <Compile Include="Definition\IDataProvider.cs" />
-    <Compile Include="Definition\IScriptedVerificationDefinition.cs" />
-    <Compile Include="Definition\IVerificationDefinition.cs" />
-    <Compile Include="Definition\IVerificationDefinitionGroup.cs" />
+    <Compile Include="Definition\ScriptedVerificationDefinition.cs" />
+    <Compile Include="Definition\VerificationDefinition.cs" />
+    <Compile Include="Definition\VerificationDefinitionGroup.cs" />
     <Compile Include="Definition\IWorkflowDataProvider.cs" />
-    <Compile Include="Definition\IWorkflowDefinition.cs" />
+    <Compile Include="Definition\WorkflowDefinition.cs" />
     <Compile Include="Runtime\IWorkflowInvoker.cs" />
     <Compile Include="Runtime\IWorkflowRuntime.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runtime\ProviderRuntimeResult.cs" />
     <Compile Include="Definition\Rule.cs" />
     <Compile Include="Runtime\WorkflowOutput.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Contracts.snk" />
+    <None Include="Definitions.cd" />
+    <None Include="RuleSet.ruleset" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
