@@ -10,13 +10,14 @@
         <title>Configuring decision engine</title>
         <link href="@Url.Content("~/Content/bootstrap-theme.css")" rel="stylesheet" type="text/css" />
         <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" type="text/css" />
+        <link href="@Url.Content("~/Content/bootstrap-switch.css")" rel="stylesheet" type="text/css" />
         <link href="@Url.Content("~/Content/tree.css")" rel="stylesheet" type="text/css" />
         <script type='text/javascript' src='@Url.Content("~/Scripts/knockout-3.0.0.debug.js")'></script>
         <script type='text/javascript' src='@Url.Content("~/Scripts/json2.js")'></script>
         <script type='text/javascript' src='@Url.Content("~/Scripts/jquery-2.0.0.js")'></script>
         <script type='text/javascript' src='@Url.Content("~/Scripts/bootstrap.js")'></script>
+        <script type='text/javascript' src='@Url.Content("~/Scripts/bootstrap-switch.js")'></script>
         <script type='text/javascript' src='@Url.Content("~/Scripts/ace/ace.js")'></script>
-        <script type='text/html' src='@Url.Content("helper.js")'></script>
         <script type="text/html" id="activities-group-tree-node">
             <a href="#" data-bind="css: (($data.data === $root.chosenGroup()) ? 'list-group-item active' : 'list-group-item'), style: { marginLeft: (indent * 20).toString() + 'px' }, click: $root.showGroupContent">
                 <!-- ko if: CheckArrayNonEmpty($data.data.groups()) || CheckArrayNonEmpty($data.data.activities()) -->
@@ -40,19 +41,30 @@
             </a>
             <!-- ko if: CheckArrayNonEmpty(data.approveRules()) -->
             <a href="#" class="list-group-item" data-bind="style: { marginLeft: ((indent + 1) * 20).toString() + 'px' }">
-                <span>Approve rules</span>
+                <span class="glyphicon glyphicon-minus"></span> <span>Approve rules</span>
             </a>
+            <!-- ko template: { name: 'rules-list', data: { list: data.approveRules, indent: indent + 2} } -->
             <!-- /ko -->
-
+            <!-- /ko -->
             <!-- ko if: CheckArrayNonEmpty(data.rejectRules()) -->
             <a href="#" class="list-group-item" data-bind="style: { marginLeft: ((indent + 1) * 20).toString() + 'px' }">
-                <span>Reject rules</span>
+                <span class="glyphicon glyphicon-minus"></span> <span>Reject rules</span>
             </a>
+            <!-- ko template: { name: 'rules-list', data: { list: data.rejectRules, indent: indent + 2} } -->
             <!-- /ko -->
-
+            <!-- /ko -->
             <!-- ko if: CheckArrayNonEmpty(data.suspendRules()) -->
             <a href="#" class="list-group-item" data-bind="style: { marginLeft: ((indent + 1) * 20).toString() + 'px' }">
-                <span>Suspend rules</span>
+                <span class="glyphicon glyphicon-minus"></span> <span>Suspend rules</span>
+            </a>
+            <!-- ko template: { name: 'rules-list', data: { list: data.suspendRules, indent: indent + 2} } -->
+            <!-- /ko -->
+            <!-- /ko -->
+        </script>
+        <script type="text/html" id="rules-list">
+            <!-- ko foreach: list -->
+            <a href="#" class="list-group-item" data-bind="style: { marginLeft: ($parent.indent * 20).toString() + 'px' }">
+                <span data-bind="text: $data.name"></span>
             </a>
             <!-- /ko -->
         </script>
@@ -96,6 +108,9 @@
 
             <!-- View for activity -->
             <div style="margin-left: 330px; margin-top: 30px" data-bind="with: chosenActivity">
+                
+                <div class="make-switch" data-text-label="Edit"><input type="checkbox" checked></div>
+
                 <div class="input-group">
                     <span class="input-group-addon">Name</span>
 
@@ -125,9 +140,14 @@
                     </div>
                 </div>
             </div>
+            
+            
 
             <!-- View for Group -->
             <div style="margin-left: 330px; margin-top: 30px" data-bind="with: chosenGroup">
+                
+                <div class="make-switch" data-text-label="Edit"><input type="checkbox" checked></div>
+
                 <div class="input-group">
                     <span class="input-group-addon">Name</span>
 
@@ -280,6 +300,11 @@
             editor.setValue(data.data.condition());
             editor.setReadOnly(true);
             self.allowEdit(false);
+            (function ($) {
+                $(function () {
+                    $('.make-switch')['bootstrapSwitch']();
+                });
+            })(jQuery);
         };
         self.showGroupContent = function (data) {
             self.chosenActivity(null);
@@ -290,6 +315,11 @@
             editor.setValue(data.data.condition());
             editor.setReadOnly(true);
             self.allowEdit(false);
+            (function ($) {
+                $(function () {
+                    $('.make-switch')['bootstrapSwitch']();
+                });
+            })(jQuery);
         };
         self.setAllowEdit = function (data) {
             self.allowEdit(true);
@@ -310,8 +340,12 @@
         
 
         $.getJSON("/data/load", function (data) {
-            for (var i = 0; i < data.Groups.length; i++) {
-                self.rootGroups.push(getObservableActivityGroup(data.Groups[i]));
+            try {
+                for (var i = 0; i < data.Groups.length; i++) {
+                    self.rootGroups.push(getObservableActivityGroup(data.Groups[i]));
+                }
+            } catch(err) {
+                console.log(err);
             }
 
             $(function () {
@@ -319,6 +353,7 @@
 
                 for (var i = 0; i < arr.length; i++) {
                     var currentIndent = getLeftMargin(arr[i]);
+                    
                     if (i < arr.length - 1 && getLeftMargin(arr[i + 1])> currentIndent) {
                         $(arr[i]).addClass('parent_li').find(' > span.glyphicon').attr('title', 'Collapse this branch');
                     }
