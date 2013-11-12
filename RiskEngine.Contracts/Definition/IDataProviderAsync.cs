@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 
 namespace RiskEngine.Contracts.Definition
 {
-    public interface IDataProvider
+    public interface IDataProviderAsync
     {
         string Name { get; }
         Type OutputType { get; }
         Type InputType { get; }
-        object ProvideData(object input);
+        Task<object> ProvideData(object input);
     }
 }

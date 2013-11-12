@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RiskEngine.Contracts.Runtime.ProviderRuntimeResult">
+    <Position X="7" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACABAAAAAAAAAAQAAAAAAAAAAAAAAAAQAAA=</HashCode>
+      <FileName>Runtime\ProviderRuntimeResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RiskEngine.Contracts.Runtime.VerificationResult">
+    <Position X="8.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAgAAAAAAAAAAQAAAAAAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\VerificationResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RiskEngine.Contracts.Runtime.WorkflowOutput">
+    <Position X="10.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAABAAAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Runtime\WorkflowOutput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="RiskEngine.Contracts.Runtime.IWorkflowInvoker&lt;TInput&gt;">
+    <Position X="5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Runtime\IWorkflowInvoker.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="RiskEngine.Contracts.Runtime.IWorkflowRuntime&lt;TInput&gt;">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAADAAAAAAAAAAAEAQIAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>Runtime\IWorkflowRuntime.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="RiskEngine.Contracts.Runtime.ERuntimeStatus">
+    <Position X="10.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAABEAAAA=</HashCode>
+      <FileName>Runtime\ERuntimeStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RiskEngine.Contracts.Runtime.EVerificationResult">
+    <Position X="7" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABCAAQAAAAIAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Runtime\EVerificationResult.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="RiskEngine.Contracts.Runtime.EWorkflowProviderRuntimeStatus">
+    <Position X="8.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAgAAAAIAAAAAAAEAAAA=</HashCode>
+      <FileName>Runtime\EWorkflowProviderRuntimeStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,14 +1,17 @@
-﻿using RiskEngine.Contracts.Definition;
+﻿using System.Collections;
+using System.Collections.Generic;
+using RiskEngine.Contracts.Definition;
 
 namespace RiskEngine.Contracts.Runtime
 {
-    interface IWorkflowRuntime<TInput>
+    public interface IWorkflowRuntime
     {
-        TInput Input { get; }
+        object Input { get; }
         WorkflowDefinition Definition { get; }
         ERuntimeStatus RuntimeStatus { get; }
+        IEnumerable<ProviderRuntimeResult> ProviderResults { get; }
         void DataReceived(ProviderRuntimeResult providerResult);
         void Start();
-        void Resume();
+        void ResumeExecution();
     }
 }
